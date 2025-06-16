@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chatbot</title>
+</head>
+<body>
+  <h1>Chat with the Bot</h1>
+  <div id="chat-box"></div>
+  <form id="chat-form">
+    <input type="text" id="user-input" autocomplete="off" placeholder="Type your message..." required>
+    <button type="submit">Send</button>
+  </form>
+  <script>
+    const chatBox = document.getElementById('chat-box');
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+
+    chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const message = userInput.value;
+      chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+      userInput.value = '';
+
+      // Send POST request to your Django API
+      const response = await fetch('/api/chat/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message: message})
+      });
+      const data = await response.json();
+      chatBox.innerHTML += `<div><strong>Bot:</strong> ${data.response}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    });
+  </script>
+</body>
+</html>

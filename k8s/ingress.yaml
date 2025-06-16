@@ -1,0 +1,38 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jordan-online-portfolio-ingress
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-west-2:886149544017:certificate/9a6a3b17-4401-421d-b448-1c77c889ab37
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+spec:
+  rules:
+    - host: jordan-morgan.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jordan-online-portfolio-service
+                port:
+                  number: 80
+    - host: www.jordan-morgan.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: jordan-online-portfolio-service
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - jordan-morgan.com
+        - www.jordan-morgan.com
+      secretName: not-needed-with-alb  # Placeholder, ALB uses ACM directly

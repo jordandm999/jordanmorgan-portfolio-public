@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jordan-online-portfolio-service
+  labels:
+    app: jordan-online-portfolio
+spec:
+  type: NodePort  # For internal testing; will use Ingress/ALB for external access
+  selector:
+    app: jordan-online-portfolio
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000  # Must match containerPort in Deployment
